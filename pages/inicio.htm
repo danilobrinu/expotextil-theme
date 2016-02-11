@@ -1,0 +1,179 @@
+title = "Inicio"
+url = "/"
+layout = "default"
+is_hidden = 0
+==
+<?php
+use RainLab\Blog\Models\Post;
+use RainLab\Blog\Models\Category;
+
+function onStart() {
+	$principalCategoria = Category::where("slug", "principal")->pluck("id");
+  	$galeriaCategoria = Category::where("slug", "galeria")->pluck("id");
+  	$sectoresCategoria = Category::where("slug", "sectores")->pluck("id");
+
+  	$this["gallery"] = Post::isPublished()
+	    ->orderBy("published_at", "desc")
+	    ->with("categories")
+	    ->whereHas("categories", function($query) use ($principalCategoria) {
+	     	  $query->where("id", $principalCategoria);
+	    })
+	    ->whereHas("categories", function($query) use ($galeriaCategoria) {
+	       $query->where("id", $galeriaCategoria);
+	    })
+	    ->get();
+
+	// Sectores
+	$this["sectores"] = Post::isPublished()
+	    ->orderBy("published_at", "desc")
+	    ->whereHas("categories", function($query) use ($sectoresCategoria) {
+	     	$query->where("id", $sectoresCategoria);
+	    })
+	    ->whereRaw("(select count(*) from rainlab_blog_posts_categories where rainlab_blog_posts_categories.post_id = rainlab_blog_posts.id and rainlab_blog_posts_categories.category_id = ?) < 1", array($galeriaCategoria))
+	    ->get();
+}
+?>
+==
+<div class="x-program x-bg-blue">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-sm-2 text-center">
+				<h3 class="x-program__title">Programa Ferial Octubre 2016</h3>
+			</div>
+			<div class="col-xs-6 col-sm-2 x-program__date">
+				<div class="x-program__date__icon x-program__date__icon--20"></div>
+				<a href="#">conferencias, desfiles, ver más</a>
+			</div>
+			<div class="col-xs-6 col-sm-2 x-program__date">
+				<div class="x-program__date__icon x-program__date__icon--21"></div>
+				<a href="#">conferencias, desfiles, ver más</a>
+			</div>
+			<div class="col-xs-6 col-sm-2 x-program__date">
+				<div class="x-program__date__icon x-program__date__icon--22"></div>
+				<a href="#">desfiles, expositores, ver más</a>
+			</div>
+			<div class="col-xs-6 col-sm-2 x-program__date">
+				<div class="x-program__date__icon x-program__date__icon--23"></div>
+				<a href="#">desfiles, expositores, ver más</a>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="hooks x-bg-bluemarine">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-sm-4">
+				<div class="x-bgi-cover" style="position: relative; height: 200px; background-image: url(https://placeholdit.imgix.net/~text?txtsize=33&txt=200%C3%97150&w=200&h=150);">
+					<a href="#" class="text-uppercase text-center" style="position: absolute; top: 50%; min-width: 260px; left: 50%; transform: translate3d(-50%, -50%, 0); display: inline-block; padding: 24px; font-size: 18px; color: #fff; background-color: rgba(0, 0, 0, .3);">plano ferial</a>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-4">
+				<div class="x-bgi-cover" style="position: relative; height: 200px; background-image: url(https://placeholdit.imgix.net/~text?txtsize=33&txt=200%C3%97150&w=200&h=150);">
+					<a href="#" class="text-uppercase text-center" style="position: absolute; top: 50%; min-width: 260px; left: 50%; transform: translate3d(-50%, -50%, 0); display: inline-block; padding: 24px; font-size: 18px; color: #fff; background-color: rgba(0, 0, 0, .3);">baje su app y asegure su ingreso</a>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-4">
+				<div class="x-bgi-cover" style="position: relative; height: 200px; background-image: url(https://placeholdit.imgix.net/~text?txtsize=33&txt=200%C3%97150&w=200&h=150);">
+					<a href="#" class="text-uppercase text-center" style="position: absolute; top: 50%; min-width: 260px; left: 50%; transform: translate3d(-50%, -50%, 0); display: inline-block; padding: 24px; font-size: 18px; color: #fff; background-color: rgba(0, 0, 0, .3);">bus a la feria</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container" style="padding-top: 32px; padding-bottom: 32px;">
+	<div class="row">
+		<div class="col-sm-8">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="x-pretty-title x-pretty-title--bluemarine">Expotextil News</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="x-pretty-title x-pretty-title--bluemarine">Participantes</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="x-pretty-title x-pretty-title--gray">Fotos y videos</div>
+					<div class="x-tile x-bgi-cover" style="background-image: url({{ post.featured_images|length > 0 ? post.featured_images.0.getPath() : "https://placeholdit.imgix.net/~text?txtsize=33&txt=360%C3%97200&w=360&h=200" }});">
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="x-pretty-title x-pretty-title--bluemarine">Quiero exponer</div>
+					<div class="x-tile x-bgi-cover" style="background-image: url({{ post.featured_images|length > 0 ? post.featured_images.0.getPath() : "https://placeholdit.imgix.net/~text?txtsize=33&txt=360%C3%97200&w=360&h=200" }});">
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="x-pretty-title x-pretty-title--lightblue">Guía textil</div>
+					<div class="x-tile x-bgi-cover" style="background-image: url({{ post.featured_images|length > 0 ? post.featured_images.0.getPath() : "https://placeholdit.imgix.net/~text?txtsize=33&txt=360%C3%97200&w=360&h=200" }});">
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="x-pretty-title x-pretty-title--bluemarine">Representantes</div>
+					<div class="x-tile x-bgi-cover" style="background-image: url({{ post.featured_images|length > 0 ? post.featured_images.0.getPath() : "https://placeholdit.imgix.net/~text?txtsize=33&txt=360%C3%97200&w=360&h=200" }});">
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="x-pretty-title x-pretty-title--blue">Ubicación</div>
+					<div class="x-tile x-bgi-cover" style="background-image: url({{ post.featured_images|length > 0 ? post.featured_images.0.getPath() : "https://placeholdit.imgix.net/~text?txtsize=33&txt=360%C3%97200&w=360&h=200" }});">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="x-pretty-title x-pretty-title--bluemarine">Sectores</div>
+					{% for post in sectores %}
+						<div class="x-tile x-bgi-cover" style="background-image: url({{ post.featured_images|length > 0 ? post.featured_images.0.getPath() : "https://placeholdit.imgix.net/~text?txtsize=33&txt=360%C3%97200&w=360&h=200" }});">
+							<div class="x-tile__title x-bg-lightblue">{{ post.title }}</div>
+							<div class="x-tile__excerpt">{{ post.excerpt }}</div>
+						</div>
+				    {% endfor %}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="x-pretty-title x-pretty-title--bluemarine">Prensa</div>
+					<div class="x-tile x-bgi-cover" style="background-image: url({{ post.featured_images|length > 0 ? post.featured_images.0.getPath() : "https://placeholdit.imgix.net/~text?txtsize=33&txt=360%C3%97200&w=360&h=200" }});">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="text-uppercase" style="border-top: 1px dotted #ddd; border-bottom: 1px dotted #ddd; font-weight: bold; padding: 16px;">colaboradores</div>
+			<div class="x-slider-collaborators">
+				<div class="x-slider-collaborators__slideshow responsive" 
+				    data-cycle-fx=carousel
+				    data-cycle-timeout=0
+				    data-cycle-carousel-visible=10
+				    data-cycle-next=".x-slider-collaborators__arrow--left"
+	    			data-cycle-prev=".x-slider-collaborators__arrow--right"
+				    data-cycle-carousel-fluid=true>
+				    <img src="https://placeholdit.imgix.net/~text?txtsize=16&txt=100%C3%9764&w=100&h=48">
+				    <img src="https://placeholdit.imgix.net/~text?txtsize=16&txt=100%C3%9764&w=100&h=48">
+				    <img src="https://placeholdit.imgix.net/~text?txtsize=16&txt=100%C3%9764&w=100&h=48">
+				    <img src="https://placeholdit.imgix.net/~text?txtsize=16&txt=100%C3%9764&w=100&h=48">
+				    <img src="https://placeholdit.imgix.net/~text?txtsize=16&txt=100%C3%9764&w=100&h=48">
+				    <img src="https://placeholdit.imgix.net/~text?txtsize=16&txt=100%C3%9764&w=100&h=48">
+				    <img src="https://placeholdit.imgix.net/~text?txtsize=16&txt=100%C3%9764&w=100&h=48">
+				    <img src="https://placeholdit.imgix.net/~text?txtsize=16&txt=100%C3%9764&w=100&h=48">
+				    <img src="https://placeholdit.imgix.net/~text?txtsize=16&txt=100%C3%9764&w=100&h=48">
+				    <img src="https://placeholdit.imgix.net/~text?txtsize=16&txt=100%C3%9764&w=100&h=48">
+				    <img src="https://placeholdit.imgix.net/~text?txtsize=16&txt=100%C3%9764&w=100&h=48">
+				    <img src="https://placeholdit.imgix.net/~text?txtsize=16&txt=100%C3%9764&w=100&h=48">
+				    <img src="https://placeholdit.imgix.net/~text?txtsize=16&txt=100%C3%9764&w=100&h=48">
+				    <img src="https://placeholdit.imgix.net/~text?txtsize=16&txt=100%C3%9764&w=100&h=48">
+				</div>
+				<div class="x-slider-collaborators__arrow x-slider-collaborators__arrow--left" role="button"></div>
+				<div class="x-slider-collaborators__arrow x-slider-collaborators__arrow--right" role="button"></div>
+			</div> 
+		</div>
+	</div>
+</div>

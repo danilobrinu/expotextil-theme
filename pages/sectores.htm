@@ -1,0 +1,30 @@
+title = "Sectores"
+url = "/sectores/:slug"
+layout = "default"
+is_hidden = 0
+
+[blogPost post]
+slug = "{{ :slug }}"
+categoryPage = "sectores"
+==
+<?php
+use RainLab\Blog\Models\Post;
+use RainLab\Blog\Models\Category;
+
+function onInit() {
+  $categoria = Category::where("slug", "sectores")->pluck("id");
+  $categoriaGaleria = Category::where("slug", "galeria")->pluck("id");
+  $this["gallery"] = $this["compradoresVisitantes"] = Post::isPublished()
+	    ->orderBy("published_at", "desc")
+	    ->with("categories")
+	    ->whereHas("categories", function($query) use ($categoria) {
+	     	  $query->where("id", $categoria);
+	    })
+	    ->whereHas("categories", function($query) use ($categoriaGaleria) {
+	       $query->where("id", $categoriaGaleria);
+	    })
+	    ->get();
+}
+?>
+==
+{% partial "page" %}

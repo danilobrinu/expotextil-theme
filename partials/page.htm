@@ -1,0 +1,22 @@
+==
+<div class="container x-container">
+  <div class="x-pretty-title x-pretty-title--blue h3">{{ post.title ? post.title : this.page.title }}</div>
+  <div class="row">
+  	<div class="col-lg-12">
+  		<div class="row">
+			<div class="col-sm-5 hidden-xs">
+				{% if post.featured_images %}
+					<div class="x-images">
+					{% for image in post.featured_images %}
+						<img src="{{ image.getPath() }}" alt="">
+					{% endfor %}
+					</div>
+				{% else %}
+					No hay imagenes
+				{% endif %}
+			</div>
+			<div class="col-xs-12 col-sm-7">{{ post.content|md|raw }}</div>
+		</div>
+  	</div>
+  </div>
+</div>

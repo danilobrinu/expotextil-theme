@@ -1,0 +1,124 @@
+==
+<?php
+use RainLab\Blog\Models\Post;
+use RainLab\Blog\Models\Category;
+
+function onStart() {
+	$galeriaCategoria = Category::where("slug", "galeria")->pluck("id");
+	$expotextilCategoria = Category::where("slug", "expotextil")->pluck("id");
+	$sectoresCategoria = Category::where("slug", "sectores")->pluck("id");
+	$expositoresCategoria = Category::where("slug", "expositores")->pluck("id");
+	$eventosFeriaCategoria = Category::where("slug", "eventos-en-feria")->pluck("id");
+	$compradoresVisitantesCategoria = Category::where("slug", "compradores-y-visitantes")->pluck("id");
+	$proveedoresCategoria = Category::where("slug", "proveedores")->pluck("id");
+
+	// Expotextil
+	$this["expotextil"] = Post::isPublished()
+	    ->orderBy("published_at", "desc")
+	    ->whereHas("categories", function($query) use ($expotextilCategoria) {
+	     	$query->where("id", $expotextilCategoria);
+	    })
+	    ->whereRaw("(select count(*) from rainlab_blog_posts_categories where rainlab_blog_posts_categories.post_id = rainlab_blog_posts.id and rainlab_blog_posts_categories.category_id = ?) < 1", array($galeriaCategoria))
+	    ->get();
+
+	// Sectores
+	$this["sectores"] = Post::isPublished()
+	    ->orderBy("published_at", "desc")
+	    ->whereHas("categories", function($query) use ($sectoresCategoria) {
+	     	$query->where("id", $sectoresCategoria);
+	    })
+	    ->whereRaw("(select count(*) from rainlab_blog_posts_categories where rainlab_blog_posts_categories.post_id = rainlab_blog_posts.id and rainlab_blog_posts_categories.category_id = ?) < 1", array($galeriaCategoria))
+	    ->get();
+
+    // Expositores
+	$this["expositores"] = Post::isPublished()
+	    ->orderBy("published_at", "desc")
+	    ->whereHas("categories", function($query) use ($expositoresCategoria) {
+	     	$query->where("id", $expositoresCategoria);
+	    })
+	    ->whereRaw("(select count(*) from rainlab_blog_posts_categories where rainlab_blog_posts_categories.post_id = rainlab_blog_posts.id and rainlab_blog_posts_categories.category_id = ?) < 1", array($galeriaCategoria))
+	    ->get();
+
+    // Eventos en feria
+	$this["eventosFeria"] = Post::isPublished()
+	    ->orderBy("published_at", "desc")
+	    ->whereHas("categories", function($query) use ($eventosFeriaCategoria) {
+	     	$query->where("id", $eventosFeriaCategoria);
+	    })
+	    ->whereRaw("(select count(*) from rainlab_blog_posts_categories where rainlab_blog_posts_categories.post_id = rainlab_blog_posts.id and rainlab_blog_posts_categories.category_id = ?) < 1", array($galeriaCategoria))
+	    ->get();
+
+    // Compradores y visitantes
+	$this["compradoresVisitantes"] = Post::isPublished()
+	    ->orderBy("published_at", "desc")
+	    ->whereHas("categories", function($query) use ($compradoresVisitantesCategoria) {
+	     	$query->where("id", $compradoresVisitantesCategoria);
+	    })
+	    ->whereRaw("(select count(*) from rainlab_blog_posts_categories where rainlab_blog_posts_categories.post_id = rainlab_blog_posts.id and rainlab_blog_posts_categories.category_id = ?) < 1", array($galeriaCategoria))
+	    ->get();
+
+	// Proveedores
+	$this["proveedores"] = Post::isPublished()
+	    ->orderBy("published_at", "desc")
+	    ->whereHas("categories", function($query) use ($proveedoresCategoria) {
+	     	$query->where("id", $proveedoresCategoria);
+	    })
+	    ->whereRaw("(select count(*) from rainlab_blog_posts_categories where rainlab_blog_posts_categories.post_id = rainlab_blog_posts.id and rainlab_blog_posts_categories.category_id = ?) < 1", array($galeriaCategoria))
+	    ->get();
+}
+?>
+==
+<ul class="nav navbar-nav">
+	<li><a href="{{ 'inicio'|page }}">Home</a></li>
+	<li class="dropdown">
+	  <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Expotextil</a>
+	  <ul class="dropdown-menu">
+	    {% for post in expotextil %}
+	    	<li><a href="{{ 'expotextil'|page({ slug: post.slug }) }}">{{ post.title }}</a></li>
+	    {% endfor %}
+	  </ul>
+	</li>
+	<li class="dropdown">
+	  <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sectores</a>
+	  <ul class="dropdown-menu">
+	    {% for post in sectores %}
+	    	<li><a href="{{ 'sectores'|page({ slug: post.slug }) }}">{{ post.title }}</a></li>
+	    {% endfor %}
+	  </ul>
+	</li>
+	<li class="dropdown">
+	  <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Expositores</a>
+	  <ul class="dropdown-menu">
+	    {% for post in expositores %}
+	    	<li><a href="{{ 'expositores'|page({ slug: post.slug }) }}">{{ post.title }}</a></li>
+	    {% endfor %}
+	  </ul>
+	</li>
+	<li><a href="{{ 'plano'|page }}">Plano</a></li>
+	<li class="dropdown">
+	  <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Eventos en feria</a>
+	  <ul class="dropdown-menu">
+	    {% for post in eventosFeria %}
+	    	<li><a href="{{ 'eventos-en-feria'|page({ slug: post.slug }) }}">{{ post.title }}</a></li>
+	    {% endfor %}
+	  </ul>
+	</li>
+	<li class="dropdown">
+	  <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Compradores y visitantes</a>
+	  <ul class="dropdown-menu">
+	    {% for post in compradoresVisitantes %}
+	    	<li><a href="{{ 'compradores-y-visitantes'|page({ slug: post.slug }) }}">{{ post.title }}</a></li>
+	    {% endfor %}
+	  </ul>
+	</li>
+	<li><a href="{{ 'prensa'|page }}">Prensa</a></li>
+	<li class="dropdown">
+	  <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Proveedores</a>
+	  <ul class="dropdown-menu">
+	    {% for post in proveedores %}
+	    	<li><a href="{{ 'proveedores'|page({ slug: post.slug }) }}">{{ post.title }}</a></li>
+	    {% endfor %}
+	  </ul>
+	</li>
+	<li><a href="{{ 'contactenos'|page }}">Contáctenos</a></li>
+</ul>

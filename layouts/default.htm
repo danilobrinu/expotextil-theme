@@ -1,0 +1,46 @@
+description = "Default layout"
+==
+<?php
+use RainLab\Blog\Models\Post;
+use RainLab\Blog\Models\Category;
+
+function onStart() {
+    $galeriaCategoria = Category::where("slug", "galeria")->pluck("id");
+    $this["recentPosts"] = Post::isPublished()
+      ->whereRaw("(select count(*) from rainlab_blog_posts_categories where rainlab_blog_posts_categories.post_id = rainlab_blog_posts.id and rainlab_blog_posts_categories.category_id = ?) < 1", array($galeriaCategoria))
+	    ->orderBy("published_at", "desc")
+	    ->take(3)
+	    ->get();
+}
+?>
+==
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Expo Textil › {{ this.page.title }} {% if post %}› {{ post.title }}{% endif %}</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+        <!-- Place favicon.ico in the root directory -->
+        <link rel="stylesheet" href="{{ ['assets/css/bootstrap.min.css', 'assets/css/main.css']|theme }}">
+        {% styles %}
+    </head>
+    <body>
+      <!-- header -->
+      {% partial "header" %}
+      <!-- body -->
+      <section class="x-body">{% page %}</section>
+      <!-- footer -->
+      {% partial "footer" %}
+      <script src="{{ [
+        'assets/js/jquery.min.js', 
+        'assets/js/bootstrap.min.js', 
+        'assets/js/cycle.min.js', 
+        'assets/js/moment.min.js', 
+        'assets/js/main.js']|theme }}"></script>
+      {% framework extras %}
+      {% scripts %}
+    </body>
+</html>

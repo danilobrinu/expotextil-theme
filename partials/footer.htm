@@ -1,0 +1,75 @@
+[viewBag]
+==
+<footer class="x-footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12 col-sm-3">
+        <!-- footer info -->
+        <dl class="x-footer__info">
+          <dt>Organiza:</dt>
+          <dd>
+            <img src="{{ 'assets/img/organizan.png'|theme }}" alt="">
+            <ul class="x-footer__info__content list-unstyled">
+              {% content "contact-info" %}
+            </ul>
+          </dd>
+          <dt>Oficializan:</dt>
+          <dd><img src="{{ 'assets/img/oficializan.png'|theme }}" alt=""></dd>
+          <dt>Patrocina:</dt>
+          <dd><img src="{{ 'assets/img/patrocina.png'|theme }}" alt=""></dd>
+        </dl>
+      </div>
+      <div class="col-sm-3 hidden-xs">
+        <div class="x-pretty-title x-pretty-title--blue">Publicaciones recientes</div>
+        <!-- recent posts -->
+        <div class="x-footer__recent-posts row">
+          {% for post in recentPosts %}
+            <div class="x-footer__recent-post col-lg-12">
+              <div class="row">
+                <div class="x-footer__recent-post__image col-sm-4">
+                  <img src="{{ post.featured_images ? post.featured_images.0.thumb(70, 70, 'crop') : 'https://placeholdit.imgix.net/~text?txtsize=16&txt=70%C3%9770&w=70&h=70' }}" alt="">
+                </div>
+                <div class="x-footer__recent-post__content col-sm-8">
+                  <p>{{ post.excerpt }}</p>
+                  {% partial "time-ago" datetime=post.created_at %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-3">
+        <div class="x-pretty-title x-pretty-title--blue">Enlaces de interés</div>
+        <ul class="x-footer__links-interest list-unstyled">
+          <li><a href="{{ 'sectores'|page({ slug: '/' }) }}">Sectores</a></li>
+          <li><a href="{{ 'eventos-en-feria'|page({ slug: '/' }) }}">Eventos en feria</a></li>
+          <li><a href="{{ 'expositores'|page({ slug: '/' })  }}">Expositores</a></li>
+          <li><a href="{{ 'compradores-y-visitantes'|page({ slug: '/' })  }}">Compradores y visitantes</a></li>
+          <li><a href="{{ 'prensa'|page({ slug: '/' })  }}">Prensa</a></li>
+          <li><a href="{{ 'proveedores'|page({ slug: '/' })  }}">Proveedores</a></li>
+        </ul>
+      </div>
+      <div class="col-xs-12 col-sm-3">
+        <div class="x-pretty-title x-pretty-title--lightblue">Suscríbete aquí</div>
+        <form class="x-footer__subscribe" action="">
+          <p class="x-footer__subscribe__content">En esta feria el visitante podrá conocer la evolución y realidad de la industria, las nuevas tendencias.</p>
+          <div class="x-footer__subscribe__data row">
+            <div class="col-sm-9">
+              <input type="text" class="form-control" placeholder="Escribe tu email">
+            </div>
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-block btn-danger">OK</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <hr class="x-footer__divider">
+    <div class="x-footer__copyright small">
+      <div class="pull-left">Diseño hecho por FOQUS</div>
+      <div class="pull-right ">
+        <a href="#">Ir arriba</a>
+      </div>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,61 @@
+[viewBag]
+==
+<header class="x-header">
+  <div class="x-header__banner">
+    <div class="container">
+      <div class="col-xs-6">
+        <img src="{{ 'assets/img/logo.png'|theme }}" alt="" class="x-header__banner__logo">
+      </div>
+      <div class="col-xs-6">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="x-header__banner__links">
+              <a href="#" class="icon-googleplus">
+                <span class="sr-only">google+</span>
+              </a>
+              <a href="#" class="icon-linkedin">
+                <span class="sr-only">linkedin</span>
+              </a>
+              <a href="#" class="icon-facebook">
+                <span class="sr-only">facebook</span>
+              </a>
+              <a href="#" class="icon-youtube">
+                <span class="sr-only">youtube</span>
+              </a>
+              <a href="#" class="icon-language">
+                <span class="sr-only">language</span>
+              </a>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="x-header__banner__info">
+              {% content "banner-info" %}
+              <button type="button" class="hidden-xs hidden-sm">REGISTRESE PARA INGRESAR</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <nav class="x-header__navbar navbar">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand hidden-lg" href="javascript:void(0);">REGISTRESE PARA INGRESAR</a>
+      </div>
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        {% partial "header-navbar" %}
+      </div>
+    </div>
+  </nav>
+  {% placeholder slider default %}
+    <div class="x-header__slider">
+      {% partial "gallery" images=gallery %}
+    </div>
+  {% endplaceholder %}
+</header>

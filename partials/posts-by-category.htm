@@ -1,0 +1,33 @@
+[viewBag]
+snippetProperties[category][title] = "Category"
+snippetProperties[category][type] = "string"
+snippetProperties[category][default] = ""
+snippetProperties[category][options][] = ""
+
+[blogPosts]
+pageNumber = "{{ :page }}"
+postsPerPage = 10
+noPostsMessage = "No posts found"
+sortOrder = "published_at desc"
+categoryPage = "blog/category"
+postPage = "blog/post"
+==
+<?php
+use RainLab\Blog\Models\Post;
+
+function onStart()
+{
+    $this['posts'] = Post::get();
+}
+?>
+==
+{% if posts %}
+	<ul class="dropdown">
+		{% for post in posts %}
+			<li>
+				<a href="{{ post.url }}">{{ post.title }}</a>
+				{{ category }}
+			</li>
+		{% endfor %}
+	</ul>
+{% endif %}

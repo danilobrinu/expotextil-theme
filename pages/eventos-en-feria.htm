@@ -1,0 +1,30 @@
+title = "Eventos en feria"
+url = "/eventos-en-feria/:slug"
+layout = "default"
+is_hidden = 0
+
+[blogPost post]
+slug = "{{ :slug }}"
+categoryPage = "eventos-en-feria"
+==
+<?php
+use RainLab\Blog\Models\Post;
+use RainLab\Blog\Models\Category;
+
+function onStart() {
+  $categoria = Category::where("slug", "eventos-en-feria")->pluck("id");
+  $categoriaGaleria = Category::where("slug", "galeria")->pluck("id");
+  $this["gallery"] = $this["compradoresVisitantes"] = Post::isPublished()
+	    ->orderBy("published_at", "desc")
+	    ->with("categories")
+	    ->whereHas("categories", function($query) use ($categoria) {
+	     	  $query->where("id", $categoria);
+	    })
+	    ->whereHas("categories", function($query) use ($categoriaGaleria) {
+	       $query->where("id", $categoriaGaleria);
+	    })
+	    ->get();
+}
+?>
+==
+{% partial "page" %}

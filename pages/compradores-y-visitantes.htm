@@ -1,0 +1,30 @@
+title = "Compradores y visitantes"
+url = "/compradores-y-visitantes/:slug"
+layout = "default"
+is_hidden = 0
+
+[blogPost post]
+slug = "{{ :slug }}"
+categoryPage = "compradores-y-visitantes"
+==
+<?php
+use RainLab\Blog\Models\Post;
+use RainLab\Blog\Models\Category;
+
+function onStart() {
+  $categoria = Category::where("slug", "compradores-y-visitantes")->pluck("id");
+  $categoriaGaleria = Category::where("slug", "galeria")->pluck("id");
+  $this["gallery"] = Post::isPublished()
+	    ->orderBy("published_at", "desc")
+	    ->with("categories")
+	    ->whereHas("categories", function($query) use ($categoria) {
+	     	  $query->where("id", $categoria);
+	    })
+	    ->whereHas("categories", function($query) use ($categoriaGaleria) {
+	       $query->where("id", $categoriaGaleria);
+	    })
+	    ->get();
+}
+?>
+==
+{% partial "page" %}
